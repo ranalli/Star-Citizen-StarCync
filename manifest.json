@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "description": "StarCync: Add members of a Star Citizen org to your contact list",
+  "name": "Star Citizen : StarCync",
+  "short_name": "StarCync",
+  "version": "0.7",
+
+  "author": "illanar",
+
+  "permissions": [ "https://robertsspaceindustries.com/*" ],
+
+  "icons": {
+    "128": "starcity.png"
+  },
+
+  "background": {
+    "scripts": [ "background.js" ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [ "jquery-3.2.1.min.js", "content.js" ],
+      "run_at": "document_end"
+    }
+  ],
+  "browser_action": {
+    "default_icon": "starcity.png"
+  }
+}
