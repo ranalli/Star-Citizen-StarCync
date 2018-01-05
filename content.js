@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener(
                         maximumContactsPrefilCount: 250,    // The maximum number of contacts this script will add
 
                         addedMembers: ["Start"],
-                        addErrors: [],
+                        addErrors: ["None"],
 
                         // Get the server base address. Supports PTU and live.
                         getBaseAddress: function () {
@@ -50,27 +50,31 @@ chrome.runtime.onMessage.addListener(
                         changeFollow: function (name, follow) {
                             var that = this;
 
-                            if (!follow || this.addErrors.length != this.addedMembers.length || (that.addedMembers.length < that.maximumContactsPrefilCount && that.addedMembers.indexOf(name.toLowerCase()) < 0)) {
+                            if (!follow || this.addErrors[0] != "250" || (that.addedMembers.length < that.maximumContactsPrefilCount && that.addedMembers.indexOf(name.toLowerCase()) < 0)) {
                                 $.ajax({
                                     async: false,
                                     type: "post",
                                     url: that.getBaseAddress() + "api/contacts/" + (follow ? "add" : "erase"),
                                     success: function (d) {
                                         if (d.msg == 'You have reached your limit of 250 contacts') {
-                                            that.addErrors.push(250);
+                                            if (that.addErrors[0] == 'None') {
+                                                that.addErrors.pop("None");
+                                            }
+                                            that.addErrors.push("250");
+                                            that.addErrors.push(that.addedMembers.length);
                                         }
                                         if (d.msg != 'Validation failed' && d.msg != 'ErrCannotAddItself' && d.msg != 'ErrNoAccountForNickname') {
                                             // tell the user if it worked
                                             console.log((follow ? "Following " : "Unfollowing ") + name + " -> " + d.msg);
 
-                                            if (follow)
+                                            if (follow) {
                                                 if (that.addedMembers[0] == 'Start') {
                                                     that.addedMembers.pop("Start");
                                                 }
                                                 that.addedMembers.push(name.toLowerCase());
-                                   
+                                            }
                                         }
-                                        
+
                                     },
                                     data: JSON.stringify({
                                         nickname: name
@@ -85,7 +89,6 @@ chrome.runtime.onMessage.addListener(
                          */
                         eraseAll: function () {
                             var that = this;
-
                             $.ajax({ // request a page of members
                                 async: false,
                                 type: "post",
@@ -116,7 +119,6 @@ chrome.runtime.onMessage.addListener(
                          */
                         changeOrgFollow: function (sid, follow, page) {
                             var that = this;
-
                             page = page || 1;
                             $.ajax({ // request a page of members
                                 async: false,
@@ -130,10 +132,9 @@ chrome.runtime.onMessage.addListener(
                                         dt.html(d.data.html);
                                         // (un-)follow all members
                                         $('.nick', dt).each(function (i, field) {
-                                            if (that.addErrors.length != that.addedMembers.length)
+                                            if (that.addErrors[0] != "250")
                                             that.changeFollow(field.innerHTML, follow);
                                         });
-
                                         // load next charge/page of members
                                         that.changeOrgFollow(sid, follow, page + 1);
                                     }
@@ -175,10 +176,10 @@ chrome.runtime.onMessage.addListener(
 
                             this.changeOrgFollow(orgac, true);
 
-                            if (this.addErrors.length == this.addedMembers.length) {
+                            if (this.addErrors[0] == "250") {
                                 alert('You have reached your limit of 250 contacts.');
                             } else {
-                                alert('DONE! Added ' + this.addedMembers.length + " members. With " + this.addErrors.length + " errors.");
+                                alert('DONE! Added ' + this.addedMembers.length + " members.");
                             }
 
                             this.addedMembers.length = [];
