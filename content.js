@@ -5,8 +5,8 @@ chrome.runtime.onMessage.addListener(
             var uri = window.location.href;
 
             //Grab URLs to look for citizen URL in My RSI - ensures you're logged in
-            console.log("Running it");
-            var arr = [], l = document.links; for (var i = 0; i < l.length; i++) {if (l[i].href.indexOf("https://robertsspaceindustries.com/citizens/") !== -1) { arr.push(l[i].href); }};arr.push("DONE");
+            console.log("Starting Star Citizen : StarCync");
+            var arr = [], l = document.links; for (var i = 0; i < l.length; i++) { if (l[i].href.indexOf("https://robertsspaceindustries.com/citizens/") !== -1) { arr.push(l[i].href); } }; arr.push("DONE");
             var tablink = window.location.toString()
             if (tablink.indexOf('https://robertsspaceindustries.com/orgs/') !== -1 && arr[0].indexOf("https://robertsspaceindustries.com/citizens/") !== -1) {
                 var orgac = tablink.split('https://robertsspaceindustries.com/orgs/')[1];
@@ -56,22 +56,22 @@ chrome.runtime.onMessage.addListener(
                                     type: "post",
                                     url: that.getBaseAddress() + "api/contacts/" + (follow ? "add" : "erase"),
                                     success: function (d) {
-                                        if (d.msg == 'You have reached your limit of 250 contacts') {
-                                            if (that.addErrors[0] == 'None') {
-                                                that.addErrors.pop("None");
-                                            }
-                                            that.addErrors.push("250");
-                                            that.addErrors.push(that.addedMembers.length);
-                                        }
                                         if (d.msg != 'Validation failed' && d.msg != 'ErrCannotAddItself' && d.msg != 'ErrNoAccountForNickname') {
                                             // tell the user if it worked
-                                            console.log((follow ? "Following " : "Unfollowing ") + name + " -> " + d.msg);
-
-                                            if (follow) {
-                                                if (that.addedMembers[0] == 'Start') {
-                                                    that.addedMembers.pop("Start");
+                                            if (d.msg == 'You have reached your limit of 250 contacts') {
+                                                if (that.addErrors[0] == 'None') {
+                                                    that.addErrors.pop("None");
                                                 }
-                                                that.addedMembers.push(name.toLowerCase());
+                                                that.addErrors.push("250");
+                                                that.addErrors.push(that.addedMembers.length);
+                                            } else {
+                                                if (follow) {
+                                                    if (that.addedMembers[0] == 'Start') {
+                                                        that.addedMembers.pop("Start");
+                                                    }
+                                                    console.log((follow ? "Following " : "Unfollowing ") + name + " -> " + d.msg);
+                                                    that.addedMembers.push(name.toLowerCase());
+                                                }
                                             }
                                         }
 
@@ -133,7 +133,7 @@ chrome.runtime.onMessage.addListener(
                                         // (un-)follow all members
                                         $('.nick', dt).each(function (i, field) {
                                             if (that.addErrors[0] != "250")
-                                            that.changeFollow(field.innerHTML, follow);
+                                                that.changeFollow(field.innerHTML, follow);
                                         });
                                         // load next charge/page of members
                                         that.changeOrgFollow(sid, follow, page + 1);
@@ -177,7 +177,16 @@ chrome.runtime.onMessage.addListener(
                             this.changeOrgFollow(orgac, true);
 
                             if (this.addErrors[0] == "250") {
-                                alert('You have reached your limit of 250 contacts.');
+                                //console.log(this.addedMembers);
+                                if (this.addedMembers.length >= 1 && this.addedMembers[0] != "Start") {
+                                    if (this.addedMembers.length == 1) {
+                                        alert('You have reached your limit of 250 contacts but [' + this.addedMembers[0] + "] from [" + orgac + "] was added to your list.");
+                                    } else {
+                                        alert('You have reached your limit of 250 contacts but [' + this.addedMembers.length + "] members from [" + orgac + "] were added to your list.");
+                                    }
+                                } else {
+                                    alert('You have reached your limit of 250 contacts.');
+                                }
                             } else {
                                 alert('DONE! Added ' + this.addedMembers.length + " members.");
                             }
@@ -186,7 +195,7 @@ chrome.runtime.onMessage.addListener(
                         }
                     };
                 PHOMemberScript.execute();
-                console.log("Ran it");
+                console.log("Finished running Star Citizen : Star Sync");
             } else {
                 if (tablink.indexOf('https://robertsspaceindustries.com/orgs/') === -1 && arr[0].indexOf("https://robertsspaceindustries.com/citizens/") !== -1) {
                     alert('Please navigate to an Org page on robertsspaceindustries.com then click the StarCync button again');
