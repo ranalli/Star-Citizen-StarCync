@@ -38,10 +38,20 @@ chrome.runtime.onMessage.addListener(
             executeScript(6);
             request.action = 0;
         }
+        if (request.action == 7) {
+            var grabList = request.list;
+            executeScript(7, grabList);
+            request.action = 0;
+        }
+        if (request.action == 8) {
+            var grabList = request.list;
+            executeScript(8, grabList);
+            request.action = 0;
+        }
 
     }
 );
-function executeScript(GOT) {
+function executeScript(GOT, grabList) {
     chrome.storage.sync.get('contacts', function (r) {
         var gotContacts;
         gotContacts = r['contacts'];
@@ -51,7 +61,7 @@ function executeScript(GOT) {
 
         var uri = window.location.href;
 
-        if (gotAction == 1 || gotAction == 2 || gotAction == 3 || gotAction == 4 || gotAction == 5 || gotAction == 6) {
+        if (gotAction == 1 || gotAction == 2 || gotAction == 3 || gotAction == 4 || gotAction == 5 || gotAction == 6 || gotAction == 7 || gotAction == 8) {
             if (gotAction == 1) {
                 var whatACT = "Follow";
             }
@@ -69,6 +79,12 @@ function executeScript(GOT) {
             }
             if (gotAction == 6) {
                 var whatACT = "Erase backup";
+            }
+            if (gotAction == 7) {
+                var whatACT = "Add from list";
+            }
+            if (gotAction == 8) {
+                var whatACT = "Remove from list";
             }
         } else { whatACT = "Unknown"; }
 
@@ -149,6 +165,7 @@ function executeScript(GOT) {
                                             if (that.removedMembers[0] == 'Start') {
                                                 that.removedMembers.pop("Start");
                                             }
+                                            console.log((follow ? "Following " : "Unfollowing ") + name + " -> " + d.msg);
                                             that.removedMembers.push(name.toLowerCase());
 
                                         }
@@ -297,7 +314,7 @@ function executeScript(GOT) {
 
                     console.log("Executing main functions");
 
-                    if (gotAction == 1 || gotAction == 2) {
+                    if (gotAction == 1 || gotAction == 2 ) {
 
 
                         if (tablink.indexOf('https://robertsspaceindustries.com/orgs/') !== -1 && arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
@@ -424,6 +441,42 @@ function executeScript(GOT) {
                             alert("Erasing Chrome Sync backup");
                             chrome.storage.sync.remove(['contacts']);
                             alert("Backup erased");
+                        }
+                    }
+                    if (gotAction == 7) {
+                        if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
+                            grabListprep = grabList.replace(/[^0-9^A-z,]/g, '');
+                            var prepped = grabListprep.replace(/\n/g, ",").split(",");
+                            this.appendMembers(prepped);
+                            if (this.addedMembers[0] != 'Start') {
+                                if (this.addErrors[0] == "250") {
+                                    //console.log(this.addedMembers);
+                                    if (this.addedMembers.length >= 1 && this.addedMembers[0] != 'Start') {
+                                        if (this.addedMembers.length == 1) {
+                                            alert('You have reached your limit of 250 contacts but [' + this.addedMembers[0] + " was added to your list.");
+                                        } else {
+                                            alert('You have reached your limit of 250 contacts but [' + this.addedMembers.length + " were added to your list.");
+                                        }
+                                    } else {
+                                        alert('You have reached your limit of 250 contacts.');
+                                    }
+                                } else {
+                                    alert('DONE! Added ' + this.addedMembers.length + " contacts.");
+                                }
+                            } else { alert('No members to add'); request.action = 0; }
+                            gotAction == 0;
+                            console.log(grabListprep);
+                            console.log(prepped);
+                        }
+                    }
+                    if (gotAction == 8) {
+                        if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
+                            grabListprep = grabList.replace(/[^0-9^A-z,]/g, '');
+                            var prepped = grabListprep.replace(/\n/g, ",").split(",");
+                            this.removeMembers(prepped);
+                            alert('DONE! Removed ' + (this.removedMembers.length - 1) + " contacts.");
+                            console.log(grabListprep);
+                            console.log(prepped);
                         }
                     }
 
