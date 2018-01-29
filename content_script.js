@@ -21,8 +21,8 @@ chrome.runtime.onMessage.addListener(
         }
 
         if (request.action == 4) {
-
-            executeScript(4);
+            var loadedTact = request.list;
+            executeScript(4, loadedTact);
             request.action = 0;
         }
 
@@ -57,9 +57,7 @@ chrome.runtime.onMessage.addListener(
     }
 );
 function executeScript(GOT, grabList) {
-    chrome.storage.sync.get('contacts', function (r) {
-        var gotContacts;
-        gotContacts = r['contacts'];
+
 
         var gotAction = GOT;
         var gotContacts;
@@ -321,7 +319,7 @@ function executeScript(GOT, grabList) {
                 execute: function () {
 
                     console.log("Executing main functions");
-                    alert("Running " + whatACT);
+                    
 
                     if (gotAction == 1 || gotAction == 2 ) {
 
@@ -329,6 +327,7 @@ function executeScript(GOT, grabList) {
                         if (tablink.indexOf('https://robertsspaceindustries.com/orgs/') !== -1 && arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
 
                             if (gotAction == 1) {
+                                alert("Running " + whatACT + " on " + orgac);
                                 this.changeOrgFollow(orgac, true);
                                 if (this.addedMembers[0] != 'Start') {
                                     if (this.addErrors[0] == "250") {
@@ -343,7 +342,7 @@ function executeScript(GOT, grabList) {
                                             alert('You have reached your limit of 250 contacts.');
                                         }
                                     } else {
-                                        alert('DONE! Added ' + this.addedMembers.length + " " + orgac + "members.");
+                                        alert('DONE! Added ' + this.addedMembers.length + " " + orgac + " members.");
                                     }
                                 } else { alert('No members to add'); request.action = 0; }
                                 gotAction == 0;
@@ -354,7 +353,7 @@ function executeScript(GOT, grabList) {
                                 alert("Unfollowing " + orgac);
                                 this.changeOrgFollow(orgac, false);
                                 console.log(this.removedMembers);
-                                alert('DONE! Removed ' + (this.removedMembers.length - 1) + " " + orgac + "members.");
+                                alert('DONE! Removed ' + (this.removedMembers.length - 1) + " " + orgac + " members.");
                                 gotAction == 0;
 
                             }
@@ -386,7 +385,7 @@ function executeScript(GOT, grabList) {
     
                             if (this.backedUpMembers.length != 0) {
                                 chrome.storage.sync.set({ contacts: this.backedUpMembers }, function () {
-                                    console.log('Name saved');
+                                    console.log('Names saved');
                                 });
                                 alert('DONE! Backed up ' + this.backedUpMembers.length + " members.");
                             } else { alert("No members to backup.");}
@@ -399,10 +398,7 @@ function executeScript(GOT, grabList) {
                     if (gotAction == 4) {
                         if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
                             alert("Loading Chrome Sync backup to RSI contacts");
-
-
-
-
+                            var gotContacts = grabList;
                             console.log(gotContacts);
                             this.appendMembers(gotContacts);
                             if (this.addedMembers[0] != 'Start') {
@@ -456,6 +452,7 @@ function executeScript(GOT, grabList) {
                         if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
                             grabListprep = grabList.replace(/[^0-9^A-z,]/g, '');
                             var prepped = grabListprep.replace(/\n/g, ",").split(",");
+                            alert("Adding members from list");
                             this.appendMembers(prepped);
                             if (this.addedMembers[0] != 'Start') {
                                 if (this.addErrors[0] == "250") {
@@ -470,7 +467,7 @@ function executeScript(GOT, grabList) {
                                         alert('You have reached your limit of 250 contacts.');
                                     }
                                 } else {
-                                    alert('DONE! Added ' + this.addedMembers.length + " contacts.");
+                                    alert('DONE! Added ' + (this.addedMembers.length + 2) + " contacts.");
                                 }
                             } else { alert('No members to add'); request.action = 0; }
                             gotAction == 0;
@@ -525,5 +522,5 @@ function executeScript(GOT, grabList) {
 
         PHOMemberScript.execute();
         gotAction = 0;
-    });
+   
 }
