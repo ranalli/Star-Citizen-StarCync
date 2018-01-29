@@ -1,0 +1,4 @@
+
+*.sqlite
+.vs/starCync/v15/.suo
+*.zip
