@@ -48,6 +48,11 @@ chrome.runtime.onMessage.addListener(
             executeScript(8, grabList);
             request.action = 0;
         }
+        if (request.action == 9) {
+
+            executeScript(9);
+            request.action = 0;
+        }
 
     }
 );
@@ -61,7 +66,7 @@ function executeScript(GOT, grabList) {
 
         var uri = window.location.href;
 
-        if (gotAction == 1 || gotAction == 2 || gotAction == 3 || gotAction == 4 || gotAction == 5 || gotAction == 6 || gotAction == 7 || gotAction == 8) {
+        if (gotAction == 1 || gotAction == 2 || gotAction == 3 || gotAction == 4 || gotAction == 5 || gotAction == 6 || gotAction == 7 || gotAction == 8 || gotAction == 9) {
             if (gotAction == 1) {
                 var whatACT = "Follow";
             }
@@ -85,6 +90,9 @@ function executeScript(GOT, grabList) {
             }
             if (gotAction == 8) {
                 var whatACT = "Remove from list";
+            }
+            if (gotAction == 9) {
+                var whatACT = "Back to text file";
             }
         } else { whatACT = "Unknown"; }
 
@@ -313,6 +321,7 @@ function executeScript(GOT, grabList) {
                 execute: function () {
 
                     console.log("Executing main functions");
+                    alert("Running " + whatACT);
 
                     if (gotAction == 1 || gotAction == 2 ) {
 
@@ -477,6 +486,32 @@ function executeScript(GOT, grabList) {
                             alert('DONE! Removed ' + (this.removedMembers.length - 1) + " contacts.");
                             console.log(grabListprep);
                             console.log(prepped);
+                        }
+                    }
+
+                    if (gotAction == 9) {
+                        if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
+                            alert("Backing up all contacts");
+                            if (this.backedUpMembers[0] == 'Start') {
+                                this.backedUpMembers.pop("Start");
+                            }
+                            this.backupALL();
+                            console.log(this.backedUpMembers);
+
+                            if (this.backedUpMembers.length != 0) {
+
+                                var textToSave = this.backedUpMembers.toString();
+                                var hiddenElement = document.createElement('a');
+
+                                hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+                                hiddenElement.target = '_blank';
+                                hiddenElement.download = 'RSIMembers.txt';
+                                hiddenElement.click();
+                                alert('DONE! Backed up ' + this.backedUpMembers.length + " members.");
+                            } else { alert("No members to backup."); }
+
+                        } else {
+                            alert('Please login to robertsspaceindustries.com then click the backup button again');
                         }
                     }
 

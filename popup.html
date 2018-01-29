@@ -1,4 +1,4 @@
-<!doctype html>  
+<!doctype html>
 <html>
 
 <head style="height: 100px">
@@ -7,17 +7,44 @@
 <body style="width: 300px" background="images\background\star-citizen.jpg">
     <center>
         <button id="follow">Follow Org</button>
-        <button id="unfollow">Unfollow Org</button>
-        <button id="backUP">Backup to Chrome Sync</button><br />
-        <button id="loadbackUP">Restore Chrome Sync to RSI</button><br />
-        <button id="eraseBackup">Erase Chrome Sync backup</button><br />
-        <button id="eraseALL">Erase all RSI Contacts</button><br />
-                                                             <hr />
-        <button id="Execute">Expand input list</button>
+        <button id="unfollow">Unfollow Org</button><br />
+        <br />
+        <button id="Execute">[Bulk add/remove options]</button><br />
         <div id="dvtext" style="display: none">
+            <hr />
+            <font color="white">Enter RSI Handles</font><br /><font color="white"> (split by commas or one name per line)</font><br />
             <textarea id="textarea" name="textarea" style="width:250px;height:150px;"></textarea><br />
             <button id="Add">Add</button> <button id="Remove">Remove</button>
+            <hr />
         </div>
+        <br />
+        <button id="bkupOptions">[Backup/Restore options]</button><br />
+        <div id="dvtext3" style="display: none">
+            <hr />
+
+            <font color="white">Restore from text file</font><br />
+            <font color="white">(Names split by commas or one name per line)</font>
+            <form id="myform">
+                <p>
+                    <input id="myfile" accept='text/plain' name="file" type="file" />
+                </p>
+            </form>
+
+            <button id="backUP2text">Backup to text file</button><br />
+            <hr />
+            <font color="white">Experimental!!</font><br />
+            <button id="backUP">Backup to Chrome Sync</button><br />
+            <button id="loadbackUP">Restore Chrome Sync to RSI</button><br />
+            <button id="eraseBackup">Erase Chrome Sync backup</button><br />
+            <hr />
+        </div>
+        <button id="destruct">[Destructive options]</button><br />
+        <div id="dvtext2" style="display: none">
+            <hr />
+            <button id="eraseALL">Erase all RSI Contacts</button><br />
+            <hr />
+        </div>
+
     </center>
     <script src="popup.js"></script>
     <script src="jquery-3.2.1.min.js"></script>
