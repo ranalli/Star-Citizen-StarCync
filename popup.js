@@ -43,9 +43,10 @@ function loadbackUP() {
         chrome.storage.sync.get('contacts', function (r) {
             var gotContacts;
             gotContacts = r['contacts'];
-            chrome.tabs.executeScript(activeTab.id, { file: 'content_script.js' }, function () {
-                chrome.tabs.sendMessage(activeTab.id, { "action": 4, "list": gotContacts });
-            });
+            if (!gotContacts) {gotContacts = 0}
+                chrome.tabs.executeScript(activeTab.id, { file: 'content_script.js' }, function () {
+                    chrome.tabs.sendMessage(activeTab.id, { "action": 4, "list": gotContacts });
+                });
         });
     });
 }
