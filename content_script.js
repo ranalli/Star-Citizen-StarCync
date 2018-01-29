@@ -344,7 +344,7 @@ function executeScript(GOT, grabList) {
                                 } else {
                                     alert('DONE! Added ' + this.addedMembers.length + " " + orgac + " members.");
                                 }
-                            } else { alert('No members to add'); request.action = 0; }
+                            } else { alert('No members to add');  }
                             gotAction == 0;
 
                         }
@@ -419,7 +419,7 @@ function executeScript(GOT, grabList) {
                                 } else {
                                     alert('DONE! Added ' + this.addedMembers.length + " members.");
                                 }
-                            } else { alert('No members to add'); request.action = 0; }
+                            } else { alert('No members to add');  }
                             gotAction == 0;
 
                         }
@@ -453,7 +453,7 @@ function executeScript(GOT, grabList) {
                 }
                 if (gotAction == 7) {
                     if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
-                        grabListprep = grabList.replace(/[^0-9^A-z,]/g, '');
+                        grabListprep = grabList.replace(/[^0-9^A-z,-]/g, '');
                         var prepped = grabListprep.replace(/\n/g, ",").split(",");
                         alert("Adding members from list");
                         this.appendMembers(prepped);
@@ -470,9 +470,9 @@ function executeScript(GOT, grabList) {
                                     alert('You have reached your limit of 250 contacts.');
                                 }
                             } else {
-                                alert('DONE! Added ' + (this.addedMembers.length + 2) + " contacts.");
+                                alert('DONE! Added ' + this.addedMembers.length  + " contacts.");
                             }
-                        } else { alert('No members to add'); request.action = 0; }
+                        } else { alert('No members to add');  }
                         gotAction == 0;
                         console.log(grabListprep);
                         console.log(prepped);
@@ -480,7 +480,7 @@ function executeScript(GOT, grabList) {
                 }
                 if (gotAction == 8) {
                     if (arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
-                        grabListprep = grabList.replace(/[^0-9^A-z,]/g, '');
+                        grabListprep = grabList.replace(/[^0-9^A-z,-]/g, '');
                         var prepped = grabListprep.replace(/\n/g, ",").split(",");
                         this.removeMembers(prepped);
                         alert('DONE! Removed ' + (this.removedMembers.length - 1) + " contacts.");
