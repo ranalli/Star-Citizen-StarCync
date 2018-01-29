@@ -327,26 +327,40 @@ function executeScript(GOT, grabList) {
                     if (tablink.indexOf('https://robertsspaceindustries.com/orgs/') !== -1 && arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
 
                         if (gotAction == 1) {
-                            alert("Running " + whatACT + " on " + orgac);
-                            this.changeOrgFollow(orgac, true);
-                            if (this.addedMembers[0] != 'Start') {
-                                if (this.addErrors[0] == "250") {
-                                    //console.log(this.addedMembers);
-                                    if (this.addedMembers.length >= 1 && this.addedMembers[0] != 'Start') {
-                                        if (this.addedMembers.length == 1) {
-                                            alert('You have reached your limit of 250 contacts but [' + this.addedMembers[0] + "] from [" + orgac + "] was added to your list.");
+                            if (orgac == "LYS") { 
+                                var json_url = "https://lys.starcync.com/"
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("GET", "https://lys.starcync.com/", true);
+                                xhr.onreadystatechange = function () {
+                                    if (xhr.readyState == 4) {
+                                        //handle the xhr response here
+                                        grabList = xhr.response;
+                                        console.log("Executing add for LYS on " + grabList);
+                                        executeScript(7, grabList);
+                                    }
+                                }
+                                xhr.send();
+                            } else {
+                                alert("Running " + whatACT + " on " + orgac);
+                                this.changeOrgFollow(orgac, true);
+                                if (this.addedMembers[0] != 'Start') {
+                                    if (this.addErrors[0] == "250") {
+                                        //console.log(this.addedMembers);
+                                        if (this.addedMembers.length >= 1 && this.addedMembers[0] != 'Start') {
+                                            if (this.addedMembers.length == 1) {
+                                                alert('You have reached your limit of 250 contacts but [' + this.addedMembers[0] + "] from [" + orgac + "] was added to your list.");
+                                            } else {
+                                                alert('You have reached your limit of 250 contacts but [' + this.addedMembers.length + "] members from [" + orgac + "] were added to your list.");
+                                            }
                                         } else {
-                                            alert('You have reached your limit of 250 contacts but [' + this.addedMembers.length + "] members from [" + orgac + "] were added to your list.");
+                                            alert('You have reached your limit of 250 contacts.');
                                         }
                                     } else {
-                                        alert('You have reached your limit of 250 contacts.');
+                                        alert('DONE! Added ' + this.addedMembers.length + " " + orgac + " members.");
                                     }
-                                } else {
-                                    alert('DONE! Added ' + this.addedMembers.length + " " + orgac + " members.");
-                                }
-                            } else { alert('No members to add');  }
-                            gotAction == 0;
-
+                                } else { alert('No members to add'); }
+                                gotAction == 0;
+                            }
                         }
 
                         if (gotAction == 2) {
