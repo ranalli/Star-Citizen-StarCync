@@ -64,9 +64,12 @@ function executeScript(GOT, grabList) {
 
     var uri = window.location.href;
 
-    if (gotAction == 1 || gotAction == 2 || gotAction == 3 || gotAction == 4 || gotAction == 5 || gotAction == 6 || gotAction == 7 || gotAction == 8 || gotAction == 9) {
+    if (gotAction == 1 || gotAction == 11 || gotAction == 2 || gotAction == 3 || gotAction == 4 || gotAction == 5 || gotAction == 6 || gotAction == 7 || gotAction == 8 || gotAction == 9) {
         if (gotAction == 1) {
             var whatACT = "Follow";
+        }
+        if (gotAction == 11) {
+            var whatACT = "Follow org";
         }
         if (gotAction == 2) {
             var whatACT = "Unfollow";
@@ -321,48 +324,47 @@ function executeScript(GOT, grabList) {
                 console.log("Executing main functions");
 
 
-                if (gotAction == 1 || gotAction == 2) {
-
-
+                if (gotAction == 1 || gotAction == 11 || gotAction == 2) {
                     if (tablink.indexOf('https://robertsspaceindustries.com/orgs/') !== -1 && arr[0].indexOf("https://robertsspaceindustries.com/account/settings") !== -1) {
-
                         if (gotAction == 1) {
-                            if (orgac == "LYS") { 
-                                var json_url = "https://lys.starcync.com/"
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("GET", "https://lys.starcync.com/", true);
-                                xhr.onreadystatechange = function () {
-                                    if (xhr.readyState == 4) {
-                                        //handle the xhr response here
-                                        grabList = xhr.response;
-                                        console.log("Executing add for LYS on " + grabList);
+                            var json_url = "https://starcync.com/" + orgac;
+                            var request = new XMLHttpRequest();
+                            request.open('GET', json_url, true);
+                            request.onreadystatechange = function () {
+                                if (request.readyState === 4) {
+                                    if (request.status !== 404) {
+                                        grabList = request.response;
+                                        console.log("Executing add for " + orgac + " on " + grabList);
                                         executeScript(7, grabList);
+                                    } else {
+                                        console.log("Executing regular org add on " + orgac);
+                                        executeScript(11);
                                     }
                                 }
-                                xhr.send();
-                            } else {
-                                alert("Running " + whatACT + " on " + orgac);
-                                this.changeOrgFollow(orgac, true);
-                                if (this.addedMembers[0] != 'Start') {
-                                    if (this.addErrors[0] == "250") {
-                                        //console.log(this.addedMembers);
-                                        if (this.addedMembers.length >= 1 && this.addedMembers[0] != 'Start') {
-                                            if (this.addedMembers.length == 1) {
-                                                alert('You have reached your limit of 250 contacts but [' + this.addedMembers[0] + "] from [" + orgac + "] was added to your list.");
-                                            } else {
-                                                alert('You have reached your limit of 250 contacts but [' + this.addedMembers.length + "] members from [" + orgac + "] were added to your list.");
-                                            }
+                            };
+                            request.send();
+                        }
+                        if (gotAction == 11) {
+                            alert("Running " + whatACT + " on " + orgac);
+                            this.changeOrgFollow(orgac, true);
+                            if (this.addedMembers[0] != 'Start') {
+                                if (this.addErrors[0] == "250") {
+                                    //console.log(this.addedMembers);
+                                    if (this.addedMembers.length >= 1 && this.addedMembers[0] != 'Start') {
+                                        if (this.addedMembers.length == 1) {
+                                            alert('You have reached your limit of 250 contacts but [' + this.addedMembers[0] + "] from [" + orgac + "] was added to your list.");
                                         } else {
-                                            alert('You have reached your limit of 250 contacts.');
+                                            alert('You have reached your limit of 250 contacts but [' + this.addedMembers.length + "] members from [" + orgac + "] were added to your list.");
                                         }
                                     } else {
-                                        alert('DONE! Added ' + this.addedMembers.length + " " + orgac + " members.");
+                                        alert('You have reached your limit of 250 contacts.');
                                     }
-                                } else { alert('No members to add'); }
-                                gotAction == 0;
-                            }
+                                } else {
+                                    alert('DONE! Added ' + this.addedMembers.length + " " + orgac + " members.");
+                                }
+                            } else { alert('No members to add'); }
+                            gotAction == 0;
                         }
-
                         if (gotAction == 2) {
                             alert("Unfollowing " + orgac);
                             this.changeOrgFollow(orgac, false);
@@ -433,7 +435,7 @@ function executeScript(GOT, grabList) {
                                 } else {
                                     alert('DONE! Added ' + this.addedMembers.length + " members.");
                                 }
-                            } else { alert('No members to add');  }
+                            } else { alert('No members to add'); }
                             gotAction == 0;
 
                         }
@@ -484,9 +486,9 @@ function executeScript(GOT, grabList) {
                                     alert('You have reached your limit of 250 contacts.');
                                 }
                             } else {
-                                alert('DONE! Added ' + this.addedMembers.length  + " contacts.");
+                                alert('DONE! Added ' + this.addedMembers.length + " contacts.");
                             }
-                        } else { alert('No members to add');  }
+                        } else { alert('No members to add'); }
                         gotAction == 0;
                         console.log(grabListprep);
                         console.log(prepped);

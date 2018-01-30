@@ -1,14 +1,12 @@
 {
-"update_url": "https://clients2.google.com/service/update2/crx",
-
   "manifest_version": 2,
   "description": "StarCync: Add members of a Star Citizen org to your contact list. Manage contacts & sync to chrome sync for fast management.",
   "name": "Star Citizen : StarCync",
   "short_name": "StarCync",
-  "version": "1.9",
+  "version": "2.1",
 
   "author": "illanar",
-  "permissions": [ "https://robertsspaceindustries.com/*", "https://*.starcync.com/*", "storage" ],
+  "permissions": [ "https://robertsspaceindustries.com/*", "https://starcync.com/*", "storage" ],
 
   "browser_action": {
     "default_icon": {
