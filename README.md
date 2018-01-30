@@ -18,7 +18,7 @@ More to come!
 
 GUI help from FireKoala
 
-Discord server (for support or questions): https://discord.gg/qqnzyVH
+Discord server (for support or questions): https://discord.starcync.com
 
 Original ORG Follow script credit goes to nitzel (https://gist.github.com/nitzel/590a97ecbdb2c8256fff).
 
